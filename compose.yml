@@ -8,7 +8,7 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
     ports:
-      - 8080:80
+      - 8080:8080
     volumes:
       - ./wordpress:/var/www/html
     depends_on:
@@ -35,6 +35,7 @@ services:
       - PROXY_URL=wpnet
       - PROXY_PORT=8080
     ports:
+      - 80:80
       - 443:443
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
