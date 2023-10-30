@@ -1,33 +1,23 @@
-version: "3"
+version: '3.3'
+
 services:
-nginx:
-  image: nginx:latest
-  container_name: nginx
-  port:
-   - "80:80"
-   - "443:443"
-  environment:
-   - DOMAIN=1.heattreater.in
-   - PROXY_URL=wordpress
-   - PROXY_PORT=80
-wordpress:
-  image: wordpress:latest
-  container_name: wordpress
-  volumes: wp-data:/var/www/html
-  port:
-   - "8080:8080"
-  restart: always
-  environment:
-      - WORDPRESS_DB_HOST=db
-      - WORDPRESS_DB_USER=wordpress
-      - WORDPRESS_DB_PASSWORD=wordpress
-      - WORDPRESS_DB_NAME=wordpress
-volumes:
-   db_data:
-   wp_data:
-db:
+  wordpress:
+    image: wordpress:latest
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    ports:
+      - 8080:80
+    volumes:
+      - ./wordpress:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - wpnet
+
+  db:
     image: mysql:5.7
-    container_name: mysql-server
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: wordpress
@@ -35,8 +25,23 @@ db:
       MYSQL_PASSWORD: wordpress
     volumes:
       - db_data:/var/lib/mysql
-    expose:
-      - 3306
-      - 33060
+    networks:
+      - wpnet
 
+  webserver:
+    image: nginx:latest
+    environment:
+      - DOMAINS=1.heattreater.in
+      - PROXY_URL=wpnet
+      - PROXY_PORT=8080
+    ports:
+      - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/certs
+      - ./wordpress:/var/www/html
+    depends_on:
+      - wordpress
+    networks:
+      - wpnet
 
