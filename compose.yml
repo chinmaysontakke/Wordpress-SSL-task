@@ -30,10 +30,6 @@ services:
 
   webserver:
     image: nginx:latest
-    environment:
-      - DOMAINS=1.heattreater.in
-      - PROXY_URL=wpnet
-      - PROXY_PORT=8080
     ports:
       - 80:80
       - 443:443
@@ -45,4 +41,9 @@ services:
       - wordpress
     networks:
       - wpnet
+ 
+networks:
+  wpnet:
 
+volumes:
+  db_data:
