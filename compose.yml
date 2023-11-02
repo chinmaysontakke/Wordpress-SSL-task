@@ -29,19 +29,12 @@ services:
       - wpnet
 
   webserver:
-    image: nginx:latest
+    image: nginx:1.22.1
     ports:
       - 80:80
-      - 443:443
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/certs:/etc/nginx/certs
-      - ./wordpress:/var/www/html
-    depends_on:
-      - wordpress
     networks:
       - wpnet
- 
+
 networks:
   wpnet:
 
