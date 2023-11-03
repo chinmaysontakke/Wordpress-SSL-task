@@ -7,6 +7,8 @@ services:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
+      VIRTUAL_HOST: linox.shop
+      LETSENCRYPT_HOST: linox.shop
     ports:
       - 8080:80
     volumes:
